@@ -8,11 +8,15 @@ Created on Wed Mar 25 15:02:03 2020
 import math
 
 #should be a function of temperature
-def density():
+#Will be density(temperature)
+#delete these variables
+temperatureR = 500#C
+temperatureHE = 450#C
+def density(temperature):
     return 1549.0 #kg/m^3
 
 #Should be a function of temperature
-def viscosity():
+def viscosity(temperature):
     return 0.009 #Pa*s(Kg/ms). from MSRE Viscosity of fuel
 
 def Reynoldsnum(density, volumetricFlowRate, pipeDiameter, viscosity):
@@ -27,7 +31,7 @@ def Reynoldsnum(density, volumetricFlowRate, pipeDiameter, viscosity):
 def HlMajor(pipeLength, fluidVelocity, diameter, Reynolds):
     '''
     Returns major head loss
-    ''' 
+    '''
     g = 9.807 #/s^2
     f = 0.1 #Initial uess of friction factor
     error = 1 #Initial error estimate
@@ -106,7 +110,7 @@ def HlMinor(fluidVelocity,fittings = ['none']):
     
 
 
-def fluidDynamics(densityofFluid, viscosityofFluid):
+def fluidDynamics(fluidTempReactor, fluidTempHeatEx):
     '''
     Outputs pressure at points in system
     '''
@@ -117,7 +121,18 @@ def fluidDynamics(densityofFluid, viscosityofFluid):
 
     g = 9.807 #m/s^2
     fluidVelocity = volFlowRate/((diameter/2)**2*math.pi)
-    Re = Reynoldsnum(density(),volFlowRate,diameter,viscosity())
+    
+    
+    #Fluid temperature after reactor and after heat exchanger,respectively
+    #THIS WILL NEED TO BE UPDATED WITH ACTUAL FUNCTION
+    temperatureR = fluidTempReactor
+    temperatureHE = fluidTempHeatEx
+    densityR = density(temperatureR)
+    densityHE = density(temperatureHE)
+    viscosityR = viscosity(temperatureR)
+    viscosityHE = viscosity(temperatureHE)
+    ReynoldsR = Reynoldsnum(densityR, volFlowRate, diameter, viscosityR)
+    ReynoldsHE = Reynoldsnum(densityHE,volFlowRate,diameter,viscosityHE)
     
     #initial pressure exiting the reactor core (Look up)
     pressure = []
@@ -153,20 +168,21 @@ def fluidDynamics(densityofFluid, viscosityofFluid):
     
     #CHANGE VISCOSITY AND DENSITY FUNCTIONS OF TEMPERATURE
     #Hl is head losses. First digit is major head loss from that point to next, second digit is minor head loss from that point to next,third is other head loss from that point to next 
-    head = [[HlMajor(fuelLoopDesign[0][1],fluidVelocity,diameter,Reynoldsnum(density(),volFlowRate,diameter,viscosity())), HlMinor(fluidVelocity,fuelLoopFittings[0]), 0],#1
+    head = [[HlMajor(fuelLoopDesign[0][1],fluidVelocity,diameter,ReynoldsR), HlMinor(fluidVelocity,fuelLoopFittings[0]), 0],#1
             [0, 0, pumpHead],#2
-            [HlMajor(fuelLoopDesign[2][1],fluidVelocity,diameter,Reynoldsnum(density(),volFlowRate,diameter,viscosity())), HlMinor(fluidVelocity,fuelLoopFittings[2]), 0],#3
+            [HlMajor(fuelLoopDesign[2][1],fluidVelocity,diameter,ReynoldsR), HlMinor(fluidVelocity,fuelLoopFittings[2]), 0],#3
             [0, 0, heatExchangerHead],#4
-            [HlMajor(fuelLoopDesign[4][1],fluidVelocity,diameter,Reynoldsnum(density(),volFlowRate,diameter,viscosity())), HlMinor(fluidVelocity, fuelLoopFittings[4]), 0],#5
+            [HlMajor(fuelLoopDesign[4][1],fluidVelocity,diameter,ReynoldsHE), HlMinor(fluidVelocity, fuelLoopFittings[4]), 0],#5
             [0, 0, purificationSystemHead],#6
-            [HlMajor(fuelLoopDesign[6][1],fluidVelocity,diameter,Reynoldsnum(density(),volFlowRate,diameter,viscosity())), HlMinor(fluidVelocity, fuelLoopFittings[6]), 0],#7
+            [HlMajor(fuelLoopDesign[6][1],fluidVelocity,diameter,ReynoldsHE), HlMinor(fluidVelocity, fuelLoopFittings[6]), 0],#7
             [0, 0, reactorHead]]#8
     
-    #pressure array
+    #pressure array. First cycles through items before the heat exchanger then after heat exchanger
     for i in range(1,8):
-        #CHANGE SO THAT DENSITY WILL BE CHANGED AS TEMPERATURE IS CHANGED
-        pressure.append(pressure[i-1]+density()*g*(fuelLoopDesign[i][0]-fuelLoopDesign[i-1][0] + head[i][0] + head[i][1] + head[i][2]))
-    
+        if i<3:
+            pressure.append(pressure[i-1]+densityR*g*(fuelLoopDesign[i][0]-fuelLoopDesign[i-1][0] + head[i][0] + head[i][1] + head[i][2]))
+        else:
+            pressure.append(pressure[i-1]+densityHE*g*(fuelLoopDesign[i][0]-fuelLoopDesign[i-1][0] + head[i][0] + head[i][1] + head[i][2]))
     
     return pressure
         
