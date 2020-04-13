@@ -40,7 +40,7 @@ zz = 12.65
 
 import heatexchangercode1 as h1
 
-TT = h1.Tfout
+TT = h1.TfoutC
 
 
 import viscfuel as muf
