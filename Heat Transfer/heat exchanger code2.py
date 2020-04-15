@@ -5,104 +5,85 @@ Created on Mon Mar 30 16:09:39 2020
 @author: cjh1_000
 """
 """
-temp
-cp  
-visc=mu 
-pr 
-k 
+ALL UNITS IN SI
 """
 
 import math 
 import numpy as np
 
-
+"""Cp of coolant"""
 x = 1046.7
 
+"""Pr of coolant"""
 z = 11.8
 
+"""Temp of coolant in C"""
 T = 390
 
+"""mu of coolant"""
 y = .0159*math.exp(3179/(T+273))
 
+"""k of coolant"""
 w = .45
 
+"""density of coolant"""
 p = 2800
 
+"""Volumetric flow of coolant"""
 vf = 850 * .0000631
 
-"""Cp"""
+
+
+"""Cp of fuel"""
 xx = 1967.79
 
 
-"""Pr"""
+"""Pr of fuel """
 zz = 12.65
 
 
 import heatexchangercode1 as h1
-
+"""Temp of fuel set by user"""
 TT = h1.TfoutC
 
 
 import viscfuel as muf
-
+"""mu of fuel taken from chemisty"""
 yy = muf.fun('mu')
 
 
-""" K """
+""" K of fuel"""
 ww = 1.4
 
 
 
 import fluiddynamics as fd
-
+"""Mass flow rate of fuel taken from fluid dynamics"""
 MassFlowRateHot = fd.fun('m') 
 
-
+""" Mass flow rate of coolant= denisty * volumetric flow rate"""
 MassFlowRateCold = p * vf
  
-
+"""inner diameter of the inner pipe in meters"""
 D1 = 10 
 
+"""outer diameter of the inner pipe in meters"""
 D2 = 12 
 
+"""inner diameter of the outer pipe in meters"""
 D3 = 20 
 
+"""Length of heat exchanger in meters"""
 L = 40
 
 
 """
-def PropertiesCold(T):
-    a = x
-    b = y    
-    c = z      
-    d = w      
-    return a, b, c, d
-    print(" ")                   
-    print("Properties of coolant: ")       
-    print("Specific Heat, Cp = ", a , " J/kg*K")
-    print("Dynamic Viscosity, mu = " , b, " N*s/m^2")
-    print("Prandtl Number, Pr = ", c)
-    print("Thermal Conductivity, k = ", d, " W/m*K")
-    print(" ")
+I used reynolds number to find the Nu for hot and cold fuild then used the effectivness to find the final Temp of both the fuel and the coolant.
+These reynolds numbers will change equations if the same shell and tube heat exchanger is not used.
+if different heat exchanger is used just switch the reynolds number equations and then code should work as intended.
 
+"""      
 
-    
-    
-def PropertiesFuel(TT):
-    e = xx
-    f = yy
-    g = zz
-    h = ww
-    return e, f, g, h
-    print("Properties of fuel ")       
-    print("Specific Heat, Cp = ", e, " J/kg*k")
-    print("Dynamic Viscosity, mu = " , f, " N*s/m^2")
-    print("Prandtl Number, Pr = ", g)
-    print("Thermal Conductivity, k = ", h, " W/m*K")
-    print(" ")
-  """  
-
-      
     
 def CounterFlowOutputs(MassFlowRateHot, MassFlowRateCold, D1, D2, D3):
     ReynoldsHot = (4.0*MassFlowRateHot)/(math.pi*D1*yy)
@@ -127,7 +108,10 @@ def CounterFlowOutputs(MassFlowRateHot, MassFlowRateCold, D1, D2, D3):
     return NuCold, NuHot, MassFlowRateHot, MassFlowRateCold, D1, D2, D3   
 
 temp = CounterFlowOutputs(MassFlowRateHot, MassFlowRateCold, D1, D2, D3) 
-"""do i need to put Nucold and Nuhot in this """
+
+"""
+All code below will not change with a change in the heat exchanger
+"""
 
 NuCold = temp[0]
 NuHot = temp[1]
@@ -160,6 +144,7 @@ Tc = T
 Th = TT 
 """Input temp hot"""
 
+"""Calculation of effectiveness and Tout"""
 Cr = Cmin/Cmax
 NTU = UA/Cmin
 e = math.exp(-NTU*(1-Cr))
