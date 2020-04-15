@@ -71,11 +71,12 @@ def function(fluidTempReactor, fluidTempHeatEx):
             [HlMajor(fuelLoopDesign[6][1],fluidVelocity,diameter,ReynoldsHE), HlMinor(fluidVelocity, fuelLoopFittings[6]), 0],#7
             [0, 0, reactorHead]]#8
     
+    #Pressure array
+    pressure = []
     #FIND BETTER INITIAL PRESSURE
     #initial pressure exiting the reactor core
-    pressure = []
     pressure.append(0.0)#pa
-    #pressure array. First cycles through items before the heat exchanger then after heat exchanger
+    #pressure array first cycles through items before the heat exchanger then after heat exchanger
     for i in range(1,8):
         if i<3:
             pressure.append(pressure[i-1]+densityR*g*(fuelLoopDesign[i][0]-fuelLoopDesign[i-1][0] + head[i][0] + head[i][1] + head[i][2]))
