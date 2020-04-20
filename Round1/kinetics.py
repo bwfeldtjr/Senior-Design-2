@@ -17,8 +17,8 @@ t1 = time.time()
 #User inputs/Inputs from other modules
 Diam = 10 #Diameter of Fuel Rod (cm)
 vol = 8*2.5**2*math.pi*28316.8
-volF = vol*.4 #Volume of Fuel (cm^3)
-volM = vol*.6 #Volume of Moderator (cm^3)
+volF = vol*.1 #Volume of Fuel (cm^3)
+volM = vol*.9 #Volume of Moderator (cm^3)
 
 dens = 6.7 #g/cm^3
 dt = 0.01 #Time Step (given by user)
