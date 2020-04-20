@@ -1,0 +1,25 @@
+# -*- coding: utf-8 -*-
+"""
+Created on Mon Apr 20 14:42:23 2020
+
+@author: Brenden
+"""
+
+import math
+
+def primary_density(T): # T must be in celcius
+    density = 2.38 - (40E-5) * T # [g/cm^3]
+    return density
+
+def primary_viscosity(T):
+    viscosity = 8.4 # [cP] At 600 celcius
+    return viscosity
+
+def secondary_density(T): # T must be in celcius
+    density = 2.16 - (40E-5) * T # [g/cm^3]
+    return density
+
+def secondary_viscosity(T): # T must be in celsius
+    T= T+273
+    viscosity = 0.118 * math.exp(3624 / T) # [cP]
+    return viscosity
