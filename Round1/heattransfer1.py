@@ -82,7 +82,7 @@ D2 = 12
 D3 = 20
  
 """Length of heat exchanger in meters"""
-L = 40
+L = 5
 
 
 """
