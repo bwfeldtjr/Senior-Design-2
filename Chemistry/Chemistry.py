@@ -24,13 +24,10 @@ def secondary_density(T):
 def secondary_viscosity(T):
     " This function returns viscosity of the coolant mixture in cP, T must be in celsius "
     T= T+273
-    viscosity = 0.118 * math.exp(3624 / T) # [cP]
+    viscosity = 0.118 * math.exp(3624 / T) 
     return viscosity
 
-#w = liF
-#x = BeF2
-#y = ZrF4
-#z = UF4
+
 def solubilitypercentage(T):
     " This function takes a temperature and 
     " returns the solubility of the fuel mixture in decimal form "
