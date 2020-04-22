@@ -71,13 +71,13 @@ MassFlowRateHot = fd.fun('m')
 """ Mass flow rate of coolant= denisty * volumetric flow rate"""
 MassFlowRateCold = p * vf
 
-"""inner diameter of the inner pipe in meters"""
+"""inner diameter of the inner pipe in inches"""
 D1 = 10 
 
-"""outer diameter of the inner pipe in meters"""
+"""outer diameter of the inner pipe in inches"""
 D2 = 12
  
-"""inner diameter of the outer pipe in meters"""
+"""inner diameter of the outer pipe in inches"""
 D3 = 20
  
 """Length of heat exchanger in meters"""
