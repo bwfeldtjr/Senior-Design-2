@@ -18,18 +18,21 @@ import fluid dynamics as fluids
 # Mass Flow Rate = kg/s
 # Density = kg/m^3
 # Volume = m^3
+def Purif(PurificationFactor):
+    '''
+    Calculates required purification constant then applies. Input is desired factor of purification
+    '''
+    r = 0.9144 #column radius in m
+    h = 1.524 #column height in m
+    V = np.pi*(r**2)*(h) #volume of column in m^3
 
-r = 0.9144 #column radius in m
-h = 1.524 #column height in m
-V = np.pi*(r**2)*(h) #volume of column in m^3
+    Mfrt = fluids.function[:,2]
+    density = #Import from fluid dynamics
+    t = (V*density)/Mfrt #time in adsorption column
 
-Mfrt = fluids.function[:,2]
-#density = #Import from fluid dynamics
-#t = (V*density)/Mfrt #time in adsorption column
-
-#C_i =  #import from Reactor Kinetics
-#k =  #adsorption coefficient - determine from time in column
-CF = np.exp(-k*t) #factor by which concentration is modified
-C_f = C_i * CF
+    C_i =  #import from Reactor Kinetics
+    k = -ln(PurificationFactor)/t
+    CF = np.exp(-k*t) #factor by which concentration is modified
+    C_f = C_i * CF
 
 #Add more for each different fission product
