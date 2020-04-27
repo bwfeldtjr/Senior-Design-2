@@ -155,8 +155,8 @@ Tf2Out = Th - (q/Ch)
 Tf2OutC = Tf2Out - 273.15
 Tc2OutC = Tc2Out - 273.15
 
-def Tf2outC
-return Tf2outC
+def Tf2outC():
+ return Tf2outC
 
 print("The heat exchange rate, q = " ,q, "J/s")
 print("Output temperature of coolant is ", Tc2Out, "K", " or ", Tc2OutC, "C")
