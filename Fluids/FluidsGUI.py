@@ -9,7 +9,7 @@ import Fluids
 import kinetics as tempf
 import heattransfer1 as ht1
 
-#pressureF = Fluids.function(tempf.fun('temp'),ht1.fun)[0]
+#pressureF = Fluids.function(tempf.fun('T'),ht1.fun)[0]
 pressureF = Fluids.function(500,450)[0]
 #pressureC = Fluids.function(ht1.fun,ht2.fun)[0]
 pressureC = Fluids.coolant(500,450)[0]
@@ -29,12 +29,12 @@ for i in range(len(pressureF)):
     pressureF[i] = round(pressureF[i])
     draw.text(xy = (0,wordLoc),text = "Pressure F" +str(i)+": "+str(pressureF[i]),fill = (0,0,0),font = fontA)
 
-wordLoc += lineWidth
+wordLoc += 2*lineWidth
+
 draw.text(xy = (0,wordLoc),text = "Coolant Loop(Pa)",fill = (0,0,0),font = fontA)
-wordLoc += lineWidth
 for i in range(len(pressureC)):
     wordLoc += lineWidth
     pressureC[i] = round(pressureC[i])
     draw.text(xy = (0,wordLoc),text = "Pressure C" +str(i)+": "+str(pressureC[i]),fill = (0,0,0),font = fontA)
  
-image.show()
+image.save('FluidsModelNew.png')
