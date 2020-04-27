@@ -60,7 +60,7 @@ ww = 1.4
 
 import Fluids as fd
 """Mass flow rate of fuel taken from fluid dynamics"""
-MassFlowRateHot = fd.function(TT,TT)[1] 
+MassFlowRateHot = fd.coolant(TT,TT)[1] 
 
 """ Mass flow rate of coolant= denisty * volumetric flow rate"""
 MassFlowRateCold = p * vf
