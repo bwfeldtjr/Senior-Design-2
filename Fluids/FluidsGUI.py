@@ -10,9 +10,9 @@ import kinetics as tempf
 import heattransfer1 as ht1
 
 #pressureF = Fluids.function(tempf.fun('T'),ht1.fun)[0]
-pressureF = Fluids.function(500,450)[0]
+pressureF = Fluids.function(500,450)[0]#DELETE and use ^
 #pressureC = Fluids.function(ht1.fun,ht2.fun)[0]
-pressureC = Fluids.coolant(500,450)[0]
+pressureC = Fluids.coolant(500,450)[0] #DELETE and use ^
 
 
 lineWidth = 20
