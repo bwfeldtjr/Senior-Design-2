@@ -10,7 +10,7 @@ def primary_density(T):
     """ This function returns density of the fuel 
     mixture in g/cm^3, T must be in celsius """
     
-    density = 2.38 - (40E-5) * T
+    density = 2.38 - (40.0E-5) * T
     return density
 
 def primary_viscosity(T):
@@ -24,15 +24,15 @@ def secondary_density(T):
     """ This function returns density of the coolant 
     mixture in g/cm^3, T must be in celsius """
     
-    density = 2.16 - (40E-5) * T
+    density = 2.16 - (40.0E-5) * T
     return density
 
 def secondary_viscosity(T):
     """ This function returns viscosity of the coolant 
     mixture in cP, T must be in celsius """
     
-    T= T+273
-    viscosity = 0.118 * math.exp(3624 / T) 
+    T= T + 273.0
+    viscosity = 0.118 * math.exp(3624.0 / T) 
     return viscosity
 
 
@@ -40,6 +40,7 @@ def solubilitypercentage(T):
     """ This function takes a temperature and 
     returns the solubility of the fuel mixture 
     in decimal form 
+    w = Lif
     x = BeF2
     y = ZrF4
     z = UF4
