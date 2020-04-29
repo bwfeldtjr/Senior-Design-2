@@ -75,7 +75,7 @@ D2 = 12
 D3 = 20 
 
 """Length of heat exchanger in meters"""
-L = 5
+L = 3
 
 
 """
