@@ -33,6 +33,10 @@ def Purif(PurificationFactor):
     C_i =  #import from Reactor Kinetics
     k = -ln(PurificationFactor)/t
     CF = np.exp(-k*t) #factor by which concentration is modified
-    C_f = C_i * CF
+    C_f = C_i*CF
+    
+    
+    return C_f    
+    
 
 #Add more for each different fission product
