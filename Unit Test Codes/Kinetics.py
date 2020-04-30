@@ -32,15 +32,12 @@ def fun(temp,con,n_pop):
     beta = 0.0065 #Effective Delayed Neutron Fraction
     cLamda = 0.0001 #Prompt Neutron Life
     v = 2.42 #Number of Neutrons produced per Fission
-    
-    pow10 = 4
 
     Temp1 = [0]*1500
-#    rho1 = [0]*10**pow10
-#    k1 = [0]*10**pow10
-#    power1 = [0]*10**pow10
     con1 = [0]*1500
     n1 = [0]*1500
+    P1 = [0]*1500
+    
     for i in range(len(Temp1)):
         T0 = 293 #K (Reference Temp)
         if i ==0:
@@ -80,15 +77,17 @@ def fun(temp,con,n_pop):
         #Calculating multiplication factor and reactivity
         k = eta*p*f*epsilon #Multiplication Factor
         rho = k/(k+1) #Reactivity related to Multiplicaiton factor
-        #rho1[i]=rho
-        #k1[i]=k
-        
+         
         #Calculating Flux and Thermal Power
         flux = n_pop * 220000
                 
         power = flux*numdens*UsigF*10**-24*200*1.0622*10**-19 #MJ/cm^3 (200 MeV per fission assumed) Thermal Power per volume
-        #power1[i]=power
         heat = power*(volF+volM) #Heat added
+        
+        #Plutonium Conversion
+        U238sigA = 2.68 #barns
+        Pu239 = flux*U238sigA*10**-24
+        
         #Table 1 of 3
         #Table 1 The slow-down properties for Flibe (67%LiF–33%BeF2). The Σs is macroscopic scattering cross section and Σa is macroscopic absorption cross section
         #Materials   	Lethargyξ	    ξΣs (cm−1)	   ξΣs/Σa
@@ -130,7 +129,7 @@ def fun(temp,con,n_pop):
 
 
     
-    return [Temp1[-1], con1[-1], n1[-1]]
+    return [Temp1[-1], con1[-1], n1[-1],Pu239]
 
 if (__name__ == "__main__"):
-    T,con,n=fun(900,0,100000)
+    T,con,n,pu =fun(900,0,100000)
