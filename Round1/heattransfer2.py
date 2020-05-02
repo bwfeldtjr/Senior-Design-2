@@ -90,16 +90,16 @@ def CounterFlowOutputs(MassFlowRateHot, MassFlowRateCold, D1, D2, D3):
     ReynoldsCold = (4.0*MassFlowRateCold)/(math.pi*(D3+D2)*y)
     NuCold = 0
     NuHot = 0
-    if(ReynoldsHot > 4000 and ReynoldsCold > 4000):
+    if(ReynoldsHot >= 4000 and ReynoldsCold >= 4000):
         NuHot = 0.023*(ReynoldsHot**(4/5))*(zz**(0.3))
         NuCold = 0.023*(ReynoldsCold**(4/5))*(z**(0.4))
-    elif(ReynoldsHot < 4000 and ReynoldsCold > 4000):
+    elif(ReynoldsHot <= 4000 and ReynoldsCold >= 4000):
         NuHot = 3.66 + ((0.668*(D1/L)*ReynoldsHot*zz)/(1+(0.04*((D1/L)*ReynoldsHot*zz)**(2/3))))
         NuCold = 0.023*(ReynoldsCold**(4/5))*(z**(0.4))
-    elif(ReynoldsHot < 4000 and ReynoldsCold < 4000):
+    elif(ReynoldsHot <= 4000 and ReynoldsCold <= 4000):
         NuHot = 3.66 + ((0.668*(D1/L)*ReynoldsHot*zz)/(1+(0.04*((D1/L)*ReynoldsHot*zz)**(2/3))))
         NuCold = 3.66 + ((0.668*(D1/L)*ReynoldsCold*z)/(1+(0.04*((D1/L)*ReynoldsCold*z)**(2/3))))
-    elif(ReynoldsHot > 4000 and ReynoldsCold < 4000):
+    elif(ReynoldsHot >= 4000 and ReynoldsCold <= 4000):
         NuHot = 0.023*(ReynoldsHot**(4/5))*(zz**(0.3))
         NuCold = 3.66 + ((0.668*(D1/L)*ReynoldsCold*z)/(1+(0.04*((D1/L)*ReynoldsCold*z)**(2/3))))
     
