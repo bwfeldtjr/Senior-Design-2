@@ -56,17 +56,17 @@ def CounterFlowOutputs(MassFlowRateHot, MassFlowRateCold, Fuel_Temp, mu_fuel):
     """ K of fuel """
     k_fuel = 1.4
     
-    """Inner diameter of the inner pipe in inches"""
+    """Inner diameter of the inner pipe in meters"""
     D1 = 10 
     
-    """Outer diameter of the inner pipe in inches"""
+    """Outer diameter of the inner pipe in meters"""
     D2 = 12
      
-    """Inner diameter of the outer pipe in inches"""
+    """Inner diameter of the outer pipe in meters"""
     D3 = 20
      
     """Length of heat exchanger in meters"""
-    L = 40
+    L = 3
     
     
 
@@ -78,16 +78,16 @@ def CounterFlowOutputs(MassFlowRateHot, MassFlowRateCold, Fuel_Temp, mu_fuel):
     NuCold = 0
     NuHot = 0
     
-    if(ReynoldsHot > 4000 and ReynoldsCold > 4000):
+    if(ReynoldsHot >= 4000 and ReynoldsCold >= 4000):
         NuHot = 0.023*(ReynoldsHot**(4/5))*(pr_fuel**(0.3))
         NuCold = 0.023*(ReynoldsCold**(4/5))*(pr_cool**(0.4))
-    elif(ReynoldsHot < 4000 and ReynoldsCold > 4000):
+    elif(ReynoldsHot <= 4000 and ReynoldsCold >= 4000):
         NuHot = 3.66 + ((0.668*(D1/L)*ReynoldsHot*pr_fuel)/(1+(0.04*((D1/L)*ReynoldsHot*pr_fuel)**(2/3))))
         NuCold = 0.023*(ReynoldsCold**(4/5))*(pr_cool**(0.4))
-    elif(ReynoldsHot < 4000 and ReynoldsCold < 4000):
+    elif(ReynoldsHot <= 4000 and ReynoldsCold <= 4000):
         NuHot = 3.66 + ((0.668*(D1/L)*ReynoldsHot*pr_fuel)/(1+(0.04*((D1/L)*ReynoldsHot*pr_fuel)**(2/3))))
         NuCold = 3.66 + ((0.668*(D1/L)*ReynoldsCold*pr_cool)/(1+(0.04*((D1/L)*ReynoldsCold*pr_cool)**(2/3))))
-    elif(ReynoldsHot > 4000 and ReynoldsCold < 4000):
+    elif(ReynoldsHot >= 4000 and ReynoldsCold <= 4000):
         NuHot = 0.023*(ReynoldsHot**(4/5))*(pr_fuel**(0.3))
         NuCold = 3.66 + ((0.668*(D1/L)*ReynoldsCold*pr_cool)/(1+(0.04*((D1/L)*ReynoldsCold*pr_cool)**(2/3))))
     else:
