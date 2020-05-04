@@ -31,7 +31,7 @@ def secondary_viscosity(T):
     mixture in cP, T must be in celsius """
     
     T= T+273
-    viscosity = 0.118 * math.exp(3624 / T) 
+    viscosity = 0.118 * math.exp(3624.0 / T) 
     return viscosity
 
 

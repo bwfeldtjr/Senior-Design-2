@@ -1,7 +1,7 @@
+  
 # -*- coding: utf-8 -*-
 """
 Created on Mon Apr 20 14:42:40 2020
-
 @author: Bjorn
 """
 
@@ -10,7 +10,7 @@ import math
 from reynolds import Reynoldsnum
 from major_head_loss import HlMajor
 from minor_head_loss import HlMinor
-import Chemistry
+import Chemistry as Chemistry
 
 
 def function(fluidTempReactor, fluidTempHeatEx):
@@ -54,11 +54,10 @@ def function(fluidTempReactor, fluidTempHeatEx):
     ReynoldsR = Reynoldsnum(densityR, volFlowRate, diameter, viscosityR)
     ReynoldsHE = Reynoldsnum(densityHE,volFlowRate,diameter,viscosityHE)
  
-    #GET BETTER ESTIMATES OF THE pump head AND HEAT EXCH
     #Head loss
     #head of components in fuel loop
-    pumpHead = 14.33#m
-    heatExchangerHead = -3.0#m
+    pumpHead = 0#m  Initial number
+    heatExchangerHead = -7.74#m
     #Purification System
     purificationDiameter = 0.9144#m
     purificationLength = 1.524#m
@@ -67,7 +66,7 @@ def function(fluidTempReactor, fluidTempHeatEx):
     purExitHead = (1/(math.pi*(purificationDiameter/2)**2/(math.pi*(diameter/2)**2)))
     ReynoldsPur = Reynoldsnum(densityHE,volFlowRate,purificationDiameter,viscosityHE)
     purificationSystemHead = -(purEntranceHead + purExitHead + HlMajor(purificationLength,purificationVel,purificationDiameter,ReynoldsPur))#m
-    reactorHead = -3.0#m
+    reactorHead = -0.3048*10**(-5)*(volFlowRate*15850.323)**2.01#m
     #First digit is major head loss from that point to next, second digit is minor head loss from that point to next,third is other head loss from that point to next 
     head = [[HlMajor(fuelLoopDesign[0][1],fluidVelocity,diameter,ReynoldsR), HlMinor(fluidVelocity,fuelLoopFittings[0]), 0],#1
             [0, 0, pumpHead],#2
@@ -77,10 +76,15 @@ def function(fluidTempReactor, fluidTempHeatEx):
             [0, 0, purificationSystemHead],#6
             [HlMajor(fuelLoopDesign[6][1],fluidVelocity,diameter,ReynoldsHE), HlMinor(fluidVelocity, fuelLoopFittings[6]), 0],#7
             [0, 0, reactorHead]]#8
-    
+
+    #Determine pump head requirements
+    for i in range(len(head)):
+        for j in range(3):
+            pumpHead += head[i][j]            
+    head[1][2] = -pumpHead
+
     #Pressure array
     pressure = []
-    #FIND BETTER INITIAL PRESSURE
     #initial pressure exiting the reactor core
     pressure.append(0.0)#pa
     #pressure array first cycles through items before the heat exchanger then after heat exchanger
@@ -88,9 +92,9 @@ def function(fluidTempReactor, fluidTempHeatEx):
         if i<3:
             pressure.append(pressure[i-1]+densityR*g*(fuelLoopDesign[i][0]-fuelLoopDesign[i-1][0] + head[i][0] + head[i][1] + head[i][2]))
         else:
-            pressure.append(pressure[i-1]+densityHE*g*(fuelLoopDesign[i][0]-fuelLoopDesign[i-1][0] + head[i][0] + head[i][1] + head[i][2]))
-    
-    #Comput mass flow rate for 
+            pressure.append(pressure[i-1]+densityR*g*(fuelLoopDesign[i][0]-fuelLoopDesign[i-1][0] + head[i][0] + head[i][1] + head[i][2]))
+
+    #Compute mass flow rate for after heat exchanger and after reactor 
     massFlowRateR = volFlowRate*densityR #After Reactor
     massFlowRateHE = volFlowRate*densityHE #After Heat Exchanger
     
@@ -138,7 +142,7 @@ def coolant(fluidTempHot, fluidTempCold):
  
     #Head loss
     #head of components in coolant loop
-    pumpHead = 14.33#m
+    pumpHead = 0#m
     #Fuel/coolant heat exchanger
     heatExchanger1Head = -3.0#m
     #Heat exchanger for thermal power
@@ -151,9 +155,14 @@ def coolant(fluidTempHot, fluidTempCold):
             [HlMajor(fuelLoopDesign[4][1],fluidVelocity,diameter,ReynoldsHE2), HlMinor(fluidVelocity, fuelLoopFittings[4]), 0],#5
             [0, 0, heatExchanger1Head]]#6
     
+    #Determine pump head requirements
+    for i in range(len(head)):
+        for j in range(3):
+            pumpHead += head[i][j]            
+    head[1][2] = -pumpHead
+
     #Pressure array
     pressure = []
-    #FIND BETTER INITIAL PRESSURE
     #initial pressure exiting the reactor core
     pressure.append(0.0)#pa
     #pressure array first cycles through items before the heat exchanger then after heat exchanger
@@ -168,13 +177,3 @@ def coolant(fluidTempHot, fluidTempCold):
     massFlowRateHE2 = volFlowRate*densityHE2 #After Heat Exchanger 2
     
     return [pressure, massFlowRateHE1, massFlowRateHE2]
-
-if (__name__ == "__main__"):
-    """Define Inputs"""
-    fluidTempReactor = None
-    fluidTempHeatEx = None
-    data_fuel = function(fluidTempReactor, fluidTempHeatEx)
-    
-    fluidTempHot = None
-    fluidTempCold = None
-    data_coolant = coolant(fluidTempHot, fluidTempCold)
