@@ -3,8 +3,6 @@
 Created on Mon Mar 23 14:35:46 2020
 @author: Brenden
 """
-#Assuming constant flux in a homogenous medium
-#Big thing left to do is get temperature dependence for cross sections figured out
 
 import numpy as np
 import math
@@ -17,41 +15,40 @@ def fun(temp,con,n_pop):
     Can return core exit temperature (T), precursor concentration (C), and neutron population (N).
     """
     #User inputs/Inputs from other modules
-    Diam = 10 #Diameter of Fuel Rod (cm)
-    vol = 8*2.5**2*math.pi*28316.8 #Total volume (based on 5ft diameter,8ft height)
-    volF = .09*vol #Volume of Fuel (cm^3)
-    volM = .91*vol #Volume of Moderator (cm^3)
+    
+    vol = 8*2.5**2*math.pi*28316.8 #Total volume (cm^3) (based on 5ft diameter,8ft height)
+    volF = .1*vol #Volume of Fuel (cm^3)
+    volM = .9*vol #Volume of Moderator (cm^3)
     
     dens = 6.7 #g/cm^3
-    dt = 0.01 #Time Step (given by user)
+    dt = 0.01 #Time Step (s)
     betai = np.array([[0.000215,0.001424,0.001274,0.002568,0.000748,0.000273]])
     lambdai = np.array([[0.0124,0.0305,0.111,0.301,1.14,3.01]])
     
     #Constants
-    ava = 6.022*10**23
-    atnum = 314
+    ava = 6.022*10**23 # (atoms/mol)
+    atnum = 314 # (g/mol)
+    numdens = dens*ava/atnum
     beta = 0.0065 #Effective Delayed Neutron Fraction
     cLamda = 0.0001 #Prompt Neutron Life
     v = 2.42 #Number of Neutrons produced per Fission
     
-    pow10 = 4
-
+    
     Temp1 = [0]*1500
-#    rho1 = [0]*10**pow10
-#    k1 = [0]*10**pow10
-#    power1 = [0]*10**pow10
     con1 = [0]*1500
     n1 = [0]*1500
+    P1 = [0]*1500 
+    
     for i in range(len(Temp1)):
         T0 = 293 #K (Reference Temp)
         if i ==0:
             T1 = temp #K (Actual Temp)
             n_pop = n_pop #Neutron Population (Start up Source Strength)
-            con = con 
+            con = con # Starting Precursor Concentration (Assumed 0)
         else:
             T1 = Temp1[i-1]
-            n_pop = newn  #Neutron Population (to be determined)
-            con = newcon#Concentration of Precursor (to be determined)
+            n_pop = newn  #Neutron Population 
+            con = newcon#Concentration of Precursor 
         corr = math.sqrt(T0/T1) #Temperature correction factor for all cross sections (Assuming in 1/v region)
 
     
@@ -69,11 +66,9 @@ def fun(temp,con,n_pop):
         FsigS = 0.018/0.102*corr #Scattering Cross section for Fluorine (cm-1)
         FsigA = FsigS/39*.102*corr #Absorption Cross section for Fluorine (cm-1)
         
-        numdens = dens*ava/atnum
-        
+                
         #Calculating Four Factors
         eta = v*UsigF/(UsigA) #Eta is reproduction factor (average number of neutrons produced per fission) 
-        I_eff = 4.45+26.6*math.sqrt(4/dens/Diam) #Was used but is meant for PWRs
         p = math.exp(-2.73/((0.207+0.261+0.102)/3)*(ava/(ava*FsigA+numdens*UsigA))**0.514)  #Resonance Escape Probability (from https://www.nrc.gov/docs/ML1214/ML12142A089.pdf)
         f = UsigA*10**-24*numdens/(BesigA+LisigA+FsigA+UsigA*10**-24*numdens) #Thermal Utilization Factor
         epsilon = 1.0 #Fast Fission Factor (Assuming homogeneous core)
@@ -81,15 +76,17 @@ def fun(temp,con,n_pop):
         #Calculating multiplication factor and reactivity
         k = eta*p*f*epsilon #Multiplication Factor
         rho = k/(k+1) #Reactivity related to Multiplicaiton factor
-        #rho1[i]=rho
-        #k1[i]=k
         
         #Calculating Flux and Thermal Power
         flux = n_pop * 220000
-                
         power = flux*numdens*UsigF*10**-24*200*1.0622*10**-19 #MJ/cm^3 (200 MeV per fission assumed) Thermal Power per volume
-        #power1[i]=power
-        heat = power*(volF+volM) #Heat added
+        heat = power*(volF+volM) # Heat added (MJ)
+        
+        #Plutonium Conversion 
+        U238SigA = 2.68 #barns
+        Pu239 = flux*U238SigA*10**-24 #Rate of Plutonium Conversion (s^-1)
+        P1[i] = Pu239
+        
         #Table 1 of 3
         #Table 1 The slow-down properties for Flibe (67%LiF–33%BeF2). The Σs is macroscopic scattering cross section and Σa is macroscopic absorption cross section
         #Materials   	Lethargyξ	    ξΣs (cm−1)	   ξΣs/Σa
@@ -129,9 +126,8 @@ def fun(temp,con,n_pop):
         newT = T1+dTT
         Temp1[i]=newT
 
-
     
     return [Temp1[-1], con1[-1], n1[-1], heat]
 
 if (__name__ == "__main__"):
-    T,con,n=fun(900,0,100000)
+    T,con,n,heat=fun(900,0,100000)
