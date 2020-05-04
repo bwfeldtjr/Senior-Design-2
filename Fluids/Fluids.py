@@ -8,9 +8,9 @@ Created on Mon Apr 20 14:42:40 2020
 import math
 
 from reynolds import Reynoldsnum
-from majorheadloss import HlMajor
-from minorheadloss import HlMinor
-import chemistry as Chemistry
+from major_head_loss import HlMajor
+from minor_head_loss import HlMinor
+import Chemistry as Chemistry
 
 
 def function(fluidTempReactor, fluidTempHeatEx):
