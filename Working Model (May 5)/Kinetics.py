@@ -127,7 +127,7 @@ def fun(temp,con,n_pop):
         Temp1[i]=newT
 
     
-    return [Temp1[-1], con1[-1], n1[-1], heat]
+    return [Temp1[-1], con1[-1], n1[-1], heat,np.sum(P1)]
 
 if (__name__ == "__main__"):
-    T,con,n,heat=fun(900,0,100000)
+    T,con,n,heat,P1=fun(900,0,100000)
