@@ -58,6 +58,7 @@ def Run_Sim(time):
         C_i = rk_data[1][0] # Concentration Array
         N = rk_data[2] # Neutron Population Array
         power = rk_data[3]/6000 # MW
+        PU_Gen = rk_data[4] #atoms/timestep
 
         
         # Chemistry
