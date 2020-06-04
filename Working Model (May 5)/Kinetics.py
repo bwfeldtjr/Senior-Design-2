@@ -75,7 +75,7 @@ def fun(temp,con,n_pop):
         
         #Calculating multiplication factor and reactivity
         k = eta*p*f*epsilon #Multiplication Factor
-        rho = k/(k+1) #Reactivity related to Multiplicaiton factor
+        rho = (k-1)/k #Reactivity related to Multiplicaiton factor
         
         #Calculating Flux and Thermal Power
         flux = n_pop * 220000
