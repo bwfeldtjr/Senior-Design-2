@@ -80,7 +80,7 @@ def fun(temp,con,n_pop):
         
         #Calculating multiplication factor and reactivity
         k = eta*p*f*epsilon #Multiplication Factor
-        rho = k/(k+1) #Reactivity related to Multiplicaiton factor
+        rho = (k-1)/k #Reactivity related to Multiplicaiton factor
         #rho1[i]=rho
         #k1[i]=k
         
